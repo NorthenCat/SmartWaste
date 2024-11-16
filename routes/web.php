@@ -12,7 +12,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'authentication'])->name('login.post');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('register', [AuthController::class, 'postRegis'])->name('register.post');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::POST('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {

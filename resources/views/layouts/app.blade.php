@@ -31,6 +31,9 @@
         integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    {{-- AlpineJs --}}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <title>SmartWaste</title>
 
     {{-- Development --}}
@@ -38,7 +41,15 @@
 </head>
 
 
-<body class="min-h-screen bg-gray-300 flex items-center rounded-lg w-full mx-auto overflow-x-hidden m-0">
+<body x-data="{ loading: true }" x-init="window.addEventListener('load', () => loading = false)"
+    class=" bg-gray-300 flex items-center rounded-lg w-full h-full mx-auto overflow-x-hidden m-0 max-w-[430px] max-h-[932px]">
+    <!-- Loading Spinner -->
+    <div x-show="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+        <div class="flex flex-col items-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#496948]"></div>
+            <p class="mt-4 text-[#496948] font-semibold">Loading...</p>
+        </div>
+    </div>
     @yield('first-script')
 
     @yield('content')
