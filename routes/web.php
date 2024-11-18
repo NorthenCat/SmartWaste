@@ -1,10 +1,16 @@
 <?php
 
-use App\Http\Controllers\Customer\HomeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
+
+//Middleware
 use App\Http\Middleware\RoleMiddleware;
 
+//Controller
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Customer\HomeController;
+use App\Http\Controllers\Customer\TransactionController;
+
+//Alias Middleware
 Route::aliasMiddleware('role', RoleMiddleware::class);
 
 Route::prefix('auth')->group(function () {
@@ -17,6 +23,12 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('c.home');
+    Route::prefix('transactions')->group(function () {
+        Route::get('buy', [TransactionController::class, 'indexBuy'])->name('c.transactions.buy');
+        Route::get('sell', [TransactionController::class, 'indexSell'])->name('c.transactions.sell');
+        Route::get('form', [TransactionController::class, 'create'])->name('c.transactions.form');
+        Route::get('map', [TransactionController::class, 'map'])->name('c.transactions.map');
+    });
 });
 
 

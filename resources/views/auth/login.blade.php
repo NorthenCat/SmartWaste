@@ -19,6 +19,10 @@
                 <input type="password" name="password" id="password" placeholder="••••••••"
                     class="w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 outline-none mt-1" />
             </div>
+            <div class="py-3 px-4 w-full flex items-center">
+                <input type="checkbox" name="remember" id="remember" class="mr-2">
+                <label for="remember" class="text-gray-700 text-sm">Remember Me</label>
+            </div>
             <button type="submit"
                 class="p-3 w-full shadow-all rounded-tl-lg rounded-b-lg bg-[#496948] flex justify-center items-center hover:shadow-all-darker hover:bg-opacity-90 transition-all duration-300 ease-in-out">
                 <span class="text-white font-medium text-lg">Login</span>

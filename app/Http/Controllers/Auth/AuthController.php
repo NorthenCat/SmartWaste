@@ -33,12 +33,13 @@ class AuthController extends Controller
         ]);
 
         $credentials['giveAccess'] = true;
-        if (Auth::attempt($credentials)) {
+        $remember = $request->has('remember');
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
             $data = User::where('email', $credentials['email'])->first();
             return redirect()->intended(Auth::user()->role === 'admin' ? '/admin' : '/dashboard');
         }
-        return redirect()->back()->with('status', 'Wrong Username or Password !');
+        return redirect()->back()->with('status', 'Wrong Email or Password !');
     }
 
     public function postRegis(Request $request)

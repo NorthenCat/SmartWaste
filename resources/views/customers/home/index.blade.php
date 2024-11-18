@@ -50,7 +50,7 @@
                     </p>
                 </div>
             </div>
-            <a href="#"
+            <a href="{{route('c.transactions.buy')}}"
                 class="flex flex-col justify-center items-center w-1/3 p-4 hover:-translate-y-1 transition-transform duration-300 ease-in-out">
                 <div class="p-4 bg-[#496948] w-full h-full flex items-center justify-center rounded-lg shadow-all ">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,7 +70,7 @@
                 </div>
                 <span>Buy</span>
             </a>
-            <a href="#"
+            <a href="{{route('c.transactions.sell')}}"
                 class="flex flex-col justify-center items-center w-1/3 p-4 hover:-translate-y-1 transition-transform duration-300 ease-in-out">
                 <div class="p-4 bg-[#496948] w-full h-full flex items-center justify-center rounded-lg shadow-all">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +94,7 @@
     </div>
     <div x-data="{
             height: parseInt(localStorage.getItem('panelHeight')) || 800,
-            minHeight: 800,
+            minHeight:100,
             maxHeight: 3600,
             isDragging: false,
             startY: 0,
@@ -106,43 +106,45 @@
         }"
         class="relative w-full max-w-md bg-white rounded-t-[40px] shadow-lg overflow-hidden transition-all duration-300 ease-in-out z-10"
         :class="{ 'select-none': isDragging }" :style="`height: ${height}px`">
-        <!-- Resize handle -->
-        <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1/2 h-2 cursor-ns-resize" @mousedown="
-                isDragging = true;
-                startY = $event.pageY;
-                document.body.classList.add('select-none');
-            " @mousemove.window="
-                if (isDragging) {
-                    $event.preventDefault();
-                    const delta = (startY - $event.pageY) *50;
-                    const newHeight = height + delta;
+        <div class="flex flex-col bg-white/95 backdrop-blur-sm w-full px-6 py-2">
+            <!-- Resize handle -->
+            <div class="w-1/2 cursor-ns-resize z-20 mx-auto" style="background-color: rgba(255, 255, 255, 0.95);"
+                @mousedown="
+                    isDragging = true;
+                    startY = $event.pageY;
+                    document.body.classList.add('select-none');
+                " @mousemove.window="
+                    if (isDragging) {
+                        $event.preventDefault();
+                        const delta = (startY - $event.pageY) * 2;
+                        const newHeight = height + delta;
 
-                    if (newHeight >= minHeight && newHeight <= maxHeight) {
-                        height = newHeight;
-                        startY = $event.pageY;
+                        if (newHeight >= minHeight && newHeight <= maxHeight) {
+                            height = newHeight;
+                            startY = $event.pageY;
+                        }
                     }
-                }
-            " @mouseup.window="
-                isDragging = false;
-                document.body.classList.remove('select-none');
-            " @mouseleave.window="
-                isDragging = false;
-                document.body.classList.remove('select-none');
-            ">
-            <hr class="w-full h-1 bg-gray-200 rounded-full mt-4" />
-        </div>
-
-        <!-- Content -->
-        <div class="p-6 overflow-y-auto h-full relative">
+                " @mouseup.window="
+                    isDragging = false;
+                    document.body.classList.remove('select-none');
+                " @mouseleave.window="
+                    isDragging = false;
+                    document.body.classList.remove('select-none');
+                ">
+                <hr class="w-full h-1 bg-gray-200 rounded-full my-2" />
+            </div>
             <!-- Header -->
-            <div class="sticky top-0 z-20 bg-white/95 backdrop-blur-sm">
+            <div class="sticky top-0 h-8 w-full z-20 bg-white/95 backdrop-blur-sm">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold">Recent Transaction</h2>
                     <button @click="toggleHeight()"
                         class="text-green-700 font-medium hover:text-green-800 transition-colors">See All</button>
                 </div>
             </div>
+        </div>
 
+        <!-- Content -->
+        <div class="p-6 overflow-y-auto h-full relative">
             <!-- Today's Transactions -->
             <div class="mb-6">
                 <h3 class="text-lg font-medium mb-4">Today</h3>
