@@ -18,7 +18,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'authentication'])->name('login.post');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('register', [AuthController::class, 'postRegis'])->name('register.post');
-    Route::POST('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
@@ -26,8 +26,10 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::prefix('transactions')->group(function () {
         Route::get('buy', [TransactionController::class, 'indexBuy'])->name('c.transactions.buy');
         Route::get('sell', [TransactionController::class, 'indexSell'])->name('c.transactions.sell');
-        Route::get('form', [TransactionController::class, 'create'])->name('c.transactions.form');
-        Route::get('map', [TransactionController::class, 'map'])->name('c.transactions.map');
+        Route::get('{title}/form/{uuid}', [TransactionController::class, 'create'])->name('c.transactions.form');
+        Route::post('addAddress', [TransactionController::class, 'addAddress'])->name('c.transactions.addAddress');
+        Route::get('addressList', [TransactionController::class, 'addressList'])->name('c.transactions.addressList');
+        Route::post('store', [TransactionController::class, 'store'])->name('c.transactions.store');
     });
 });
 

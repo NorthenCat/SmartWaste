@@ -91,6 +91,21 @@
                 <span>Sell</span>
             </a>
         </div>
+        <div id="successCard" class="flex flex-col w-full p-2 bg-white rounded-2xl">
+            <button type="button"
+                onclick="event.preventDefault(); document.getElementById('successCard').classList.add('hidden');"
+                class="ml-auto flex justify-center items-center rounded-full border-2 border-[#496948] bg-white w-8 h-8 text-center text-[#496948] hover:bg-[#496948] hover:text-white transition-colors duration-300 ease-in-out">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+
+            <div class="flex flex-col justify-center items-center space-y-2 h-full">
+                <img src="{{asset('img/asset_web/success.png')}}" alt="" class="w-full max-w-64">
+                <div class="space-y-2 pb-8 text-center">
+                    <p class="font-semibold text-xl">Transaction Success</p>
+                    <span class="font-light text-gray-300">Please wait until item to be delivered</span>
+                </div>
+            </div>
+        </div>
     </div>
     <div x-data="{
             height: parseInt(localStorage.getItem('panelHeight')) || 800,

@@ -13,36 +13,34 @@
     </div>
     <div
         class="flex flex-col p-4 justify-start items-center space-y-4 bg-white rounded-tl-[40px] h-full w-full overflow-y-auto">
-        <a href="{{route('c.transactions.form')}}" class="grid grid-cols-2 bg-[#496948] w-full rounded-3xl p-4 gap-4">
+        @foreach($products as $product)
+        @if($title=='Buy')
+        <a href="{{route('c.transactions.form', ['title'=>$title, 'uuid'=>$product->uuid])}}"
+            class="grid grid-cols-2 bg-[#496948] w-full rounded-3xl p-4 gap-4">
             <div class="bg-white w-full h-full rounded-xl flex items-center justify-center">
                 <img src="{{asset('img/asset_web/box.png')}}" alt="Cardboard" class="w-32 h-32 object-cover">
             </div>
             <div class="flex flex-col justify-center space-y-2">
-                <p class="text-white text-lg font-bold">Cardboard Box</p>
-                <p class="text-white">Rp. 5 /gr</p>
-                <span class="text-gray-300 text-sm">Min > 800gr</span>
+                <p class="text-white text-lg font-bold">{{ucwords($product->name)}}</p>
+                <p class="text-white">Rp. {{$product->price_per_unit}} /{{$product->unit}}</p>
+                <span class="text-gray-300 text-sm">Min > {{$product->minimal_weight.$product->unit}}</span>
+                <span class="text-gray-300 text-sm">Stock : {{$product->stock.$product->stock_unit}}</span>
             </div>
         </a>
-        <a href="#" class="grid grid-cols-2 bg-[#496948] w-full rounded-3xl p-4 gap-4">
+        @else
+        <a href="{{route('c.transactions.form', ['title'=>$title, 'uuid'=>$product->uuid])}}"
+            class="grid grid-cols-2 bg-[#496948] w-full rounded-3xl p-4 gap-4">
             <div class="bg-white w-full h-full rounded-xl flex items-center justify-center">
-                <img src="{{asset('img/asset_web/papers.png')}}" alt="Cardboard" class="w-32 h-32 object-cover">
+                <img src="{{asset('img/asset_web/box.png')}}" alt="Cardboard" class="w-32 h-32 object-cover">
             </div>
             <div class="flex flex-col justify-center space-y-2">
-                <p class="text-white text-lg font-bold">Paper</p>
-                <p class="text-white">Rp. 11 /gr</p>
-                <span class="text-gray-300 text-sm">Min > 800gr</span>
+                <p class="text-white text-lg font-bold">{{ucwords($product->name)}}</p>
+                <p class="text-white">Rp. {{$product->price_sell_per_unit}} /{{$product->unit}}</p>
+                <span class="text-gray-300 text-sm">Min > {{$product->minimal_sell_weight.$product->unit}}</span>
             </div>
         </a>
-        <a href="#" class="grid grid-cols-2 bg-[#496948] w-full rounded-3xl p-4 gap-4">
-            <div class="bg-white w-full h-full rounded-xl flex items-center justify-center">
-                <img src="{{asset('img/asset_web/plastic.png')}}" alt="Cardboard" class="w-32 h-32 object-cover">
-            </div>
-            <div class="flex flex-col justify-center space-y-2">
-                <p class="text-white text-lg font-bold">Cardboard Box</p>
-                <p class="text-white">Rp. 3 /gr</p>
-                <span class="text-gray-300 text-sm">Min > 800gr</span>
-            </div>
-        </a>
+        @endif
+        @endforeach
     </div>
 </main>
 @endsection

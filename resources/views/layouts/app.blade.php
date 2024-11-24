@@ -34,12 +34,6 @@
     {{-- AlpineJs --}}
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    {{-- Leaflet JS (For Map) --}}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
     <title>SmartWaste</title>
 
     {{-- Development --}}
@@ -47,20 +41,28 @@
 </head>
 
 
-<body x-data="{ loading: true }" x-init="window.addEventListener('load', () => loading = false)"
-    class=" bg-gray-300 flex items-center rounded-lg w-full h-full mx-auto my-auto overflow-x-hidden m-0 max-w-[430px]">
+<body
+    class="bg-gray-300 flex items-center rounded-lg w-full h-full mx-auto my-auto overflow-x-hidden m-0 max-w-[430px]">
+
     <!-- Loading Spinner -->
-    <div x-show="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+    <div id="loadingSpinner" class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
         <div class="flex flex-col items-center">
             <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#496948]"></div>
             <p class="mt-4 text-[#496948] font-semibold">Loading...</p>
         </div>
     </div>
-    @yield('first-script')
 
+    @stack('first-script')
     @yield('content')
-
-    @yield('end-script')
+    @stack('end-script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const spinner = document.getElementById('loadingSpinner');
+            window.addEventListener('load', function() {
+                spinner.style.display = 'none';
+            });
+        });
+    </script>
 </body>
 
 </html>
