@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->string('address');
             $table->string('type');
             $table->integer('bonus_point');
+            $table->boolean('is_promo')->default(false);
+            $table->integer('promo_id')->nullable();
             $table->timestamps();
         });
     }

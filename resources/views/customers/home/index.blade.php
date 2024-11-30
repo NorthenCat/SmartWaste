@@ -12,7 +12,7 @@
                     <div class="rounded-full bg-zinc-200/50 p-1">
                         <img src="{{asset('img/asset_web/avatar.png')}}" class="w-6" alt="profile image">
                     </div>
-                    <p class="whitespace-nowrap">Hi, {{Auth::user()->first_name}}
+                    <p class="whitespace-nowrap font-medium">Hi, {{Auth::user()->first_name}}
                         <span><i class="fa-solid fa-chevron-down fa-sm ms-2" :class="{'rotate-180': open}"></i></span>
                     </p>
                 </div>
@@ -41,7 +41,8 @@
         </div>
 
         <div class="flex flex-row justify-between items-center bg-white rounded-2xl py-2 px-4 h-[134.8px]">
-            <div class="flex flex-col justify-start items-center shadow-all rounded-xl p-1 h-full w-2/3">
+            <a href="{{route('c.redeemPoint')}}"
+                class="flex flex-col justify-start items-center shadow-all rounded-xl p-1 h-full w-2/3 hover:-translate-y-1 transition-transform duration-300 ease-in-out">
                 <p class="text-sm font-bold">My Points</p>
                 <hr class="w-3/4 border-t-2 border-gray-300">
                 <div class="w-full h-full flex items-center justify-center px-1">
@@ -49,7 +50,7 @@
                         {{ number_format(Auth::user()->customer->point) }}
                     </p>
                 </div>
-            </div>
+            </a>
             <a href="{{route('c.transactions.buy')}}"
                 class="flex flex-col justify-center items-center w-1/3 p-4 hover:-translate-y-1 transition-transform duration-300 ease-in-out">
                 <div class="p-4 bg-[#496948] w-full h-full flex items-center justify-center rounded-lg shadow-all ">
@@ -91,6 +92,7 @@
                 <span>Sell</span>
             </a>
         </div>
+        @if (session('success_transaction'))
         <div id="successCard" class="flex flex-col w-full p-2 bg-white rounded-2xl">
             <button type="button"
                 onclick="event.preventDefault(); document.getElementById('successCard').classList.add('hidden');"
@@ -106,6 +108,23 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if (session('success_redeem'))
+        <div id="successCard" class="flex flex-col w-full p-2 bg-white rounded-2xl">
+            <button type="button"
+                onclick="event.preventDefault(); document.getElementById('successCard').classList.add('hidden');"
+                class="ml-auto flex justify-center items-center rounded-full border-2 border-[#496948] bg-white w-8 h-8 text-center text-[#496948] hover:bg-[#496948] hover:text-white transition-colors duration-300 ease-in-out">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+
+            <div class="flex flex-col justify-center items-center space-y-2 h-full">
+                <img src="{{asset('img/asset_web/success.png')}}" alt="" class="w-full max-w-64">
+                <div class="space-y-2 pb-8 text-center">
+                    <p class="font-semibold text-xl">Redeem Successful</p>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
     <div x-data="{
             height: parseInt(localStorage.getItem('panelHeight')) || 800,
@@ -119,7 +138,7 @@
                 localStorage.setItem('panelHeight', this.height);
             }
         }"
-        class="relative w-full max-w-md bg-white rounded-t-[40px] shadow-lg overflow-hidden transition-all duration-300 ease-in-out z-10"
+        class="w-full max-w-md bg-white rounded-t-[40px] shadow-lg overflow-hidden transition-all duration-300 ease-in-out z-10"
         :class="{ 'select-none': isDragging }" :style="`height: ${height}px`">
         <div class="flex flex-col bg-white/95 backdrop-blur-sm w-full px-6 py-2">
             <!-- Resize handle -->
@@ -161,66 +180,168 @@
         <!-- Content -->
         <div class="p-6 overflow-y-auto h-full relative">
             <!-- Today's Transactions -->
+            @if(!$todayTransactions->isEmpty())
             <div class="mb-6">
                 <h3 class="text-lg font-medium mb-4">Today</h3>
+                @foreach ($todayTransactions as $transaction)
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-green-700 rounded-xl flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 14v6m-2-6v6M9 14v6m-2-6v6" />
+                            @if($transaction->type=="Buy")
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5 21H18.6688C19.8945 21 20.8319 19.9074 20.6455 18.6959L19.2609 9.69589C19.1108 8.72022 18.2713 8 17.2842 8H6.71584C5.7287 8 4.8892 8.72022 4.73909 9.69589L3.35448 18.6959C3.16809 19.9074 4.10545 21 5.33122 21H7.5"
+                                        stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M12 12V19M12 19L15 16M12 19L9 16" stroke="#fff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5" stroke="#fff"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
                             </svg>
+                            @else
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5 21H18.6688C19.8945 21 20.8319 19.9074 20.6455 18.6959L19.2609 9.69589C19.1108 8.72022 18.2713 8 17.2842 8H6.71584C5.7287 8 4.8892 8.72022 4.73909 9.69589L3.35448 18.6959C3.16809 19.9074 4.10545 21 5.33122 21H7.5"
+                                        stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M12 19V12M12 12L15 15M12 12L9 15" stroke="#fff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5" stroke="#fff"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            @endif
                         </div>
                         <div>
-                            <p class="font-semibold">Plastic Bottle</p>
-                            <p class="text-gray-500 text-sm">500gr</p>
+                            <p class="font-semibold">{{ $transaction->product_name }}</p>
+                            <p class="text-gray-500 text-sm">{{ $transaction->quantity }}{{ $transaction->unit }}</p>
                         </div>
                     </div>
-                    <span class="text-green-700 font-medium">+5 Points</span>
+                    @if($transaction->type=="Buy")
+                    <span class="text-red-700 font-medium">Rp. {{ number_format($transaction->total_price) }}</span>
+                    @else
+                    <span class="text-green-700 font-medium">{{ $transaction->bonus_point }} Points</span>
+                    @endif
                 </div>
+                @endforeach
             </div>
+            @endif
 
             <!-- Yesterday's Transactions -->
-            <div>
+            @if(!$yesterdayTransactions->isEmpty())
+            <div class="mb-6">
                 <h3 class="text-lg font-medium mb-4">Yesterday</h3>
-                <div class="space-y-4">
-                    <!-- Papers -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-green-700 rounded-xl flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-semibold">Papers</p>
-                                <p class="text-gray-500 text-sm">3Kg</p>
-                            </div>
+                @foreach ($yesterdayTransactions as $transaction)
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-green-700 rounded-xl flex items-center justify-center">
+                            @if($transaction->type=="Buy")
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5 21H18.6688C19.8945 21 20.8319 19.9074 20.6455 18.6959L19.2609 9.69589C19.1108 8.72022 18.2713 8 17.2842 8H6.71584C5.7287 8 4.8892 8.72022 4.73909 9.69589L3.35448 18.6959C3.16809 19.9074 4.10545 21 5.33122 21H7.5"
+                                        stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M12 12V19M12 19L15 16M12 19L9 16" stroke="#fff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5" stroke="#fff"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            @else
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5 21H18.6688C19.8945 21 20.8319 19.9074 20.6455 18.6959L19.2609 9.69589C19.1108 8.72022 18.2713 8 17.2842 8H6.71584C5.7287 8 4.8892 8.72022 4.73909 9.69589L3.35448 18.6959C3.16809 19.9074 4.10545 21 5.33122 21H7.5"
+                                        stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M12 19V12M12 12L15 15M12 12L9 15" stroke="#fff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5" stroke="#fff"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            @endif
                         </div>
-                        <span class="text-green-700 font-medium">+10 Points</span>
-                    </div>
-
-                    <!-- Cardboard Box -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-green-700 rounded-xl flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-semibold">Cardboard Box</p>
-                                <p class="text-gray-500 text-sm">1Kg</p>
-                            </div>
+                        <div>
+                            <p class="font-semibold">{{ $transaction->product_name }}</p>
+                            <p class="text-gray-500 text-sm">{{ $transaction->quantity }}{{ $transaction->unit }}</p>
                         </div>
-                        <span class="text-red-700 font-medium">Rp 5.000</span>
                     </div>
+                    @if($transaction->type=="Buy")
+                    <span class="text-red-700 font-medium">Rp. {{ number_format($transaction->total_price) }}</span>
+                    @else
+                    <span class="text-green-700 font-medium">{{ $transaction->bonus_point }} Points</span>
+                    @endif
                 </div>
+                @endforeach
+            </div>
+            @endif
+
+            <!-- Transactions After Yesterday -->
+            <div>
+                @foreach ($otherTransactions as $date => $groupedTransactions)
+                <h3 class="text-lg font-medium mb-4">{{ $date }}</h3>
+                @foreach ($groupedTransactions as $transaction)
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-green-700 rounded-xl flex items-center justify-center">
+                            @if($transaction->type=="Buy")
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5 21H18.6688C19.8945 21 20.8319 19.9074 20.6455 18.6959L19.2609 9.69589C19.1108 8.72022 18.2713 8 17.2842 8H6.71584C5.7287 8 4.8892 8.72022 4.73909 9.69589L3.35448 18.6959C3.16809 19.9074 4.10545 21 5.33122 21H7.5"
+                                        stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M12 12V19M12 19L15 16M12 19L9 16" stroke="#fff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5" stroke="#fff"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            @else
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5 21H18.6688C19.8945 21 20.8319 19.9074 20.6455 18.6959L19.2609 9.69589C19.1108 8.72022 18.2713 8 17.2842 8H6.71584C5.7287 8 4.8892 8.72022 4.73909 9.69589L3.35448 18.6959C3.16809 19.9074 4.10545 21 5.33122 21H7.5"
+                                        stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    </path>
+                                    <path d="M12 19V12M12 12L15 15M12 12L9 15" stroke="#fff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M14 5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5" stroke="#fff"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            @endif
+                        </div>
+                        <div>
+                            <p class="font-semibold">{{ $transaction->product_name }}</p>
+                            <p class="text-gray-500 text-sm">{{ $transaction->quantity }}{{ $transaction->unit }}</p>
+                        </div>
+                    </div>
+                    @if($transaction->type=="Buy")
+                    <span class="text-red-700 font-medium">Rp. {{ number_format($transaction->total_price) }}</span>
+                    @else
+                    <span class="text-green-700 font-medium">{{ $transaction->bonus_point }} Points</span>
+                    @endif
+                </div>
+                @endforeach
+                @endforeach
             </div>
         </div>
     </div>

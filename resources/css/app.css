@@ -5,3 +5,30 @@
 [x-cloak] {
     display: none !important;
 }
+
+/* Custom ScrollBar */
+/* width */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Horizontal scrollbar height */
+::-webkit-scrollbar:horizontal {
+    height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

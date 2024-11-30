@@ -75,6 +75,15 @@
                 </div>
                 <span id="error-address" class="error-message text-red-500 text-sm hidden"></span>
             </div>
+            <div class="bg-white w-full rounded-3xl p-4 shadow-all space-y-4">
+                <div class="flex flex-row justify-between items-center">
+                    <h2 class="text-2xl font-semibold">Choose Promo</h2>
+                </div>
+                <div id="promoList" class="flex items-center mb-4 space-x-2 overflow-x-auto">
+                    {{-- List of promo --}}
+                </div>
+                <span id="error-promo" class="error-message text-red-500 text-sm hidden"></span>
+            </div>
             @if($title=='Buy')
             <button id="formButton" type="submit"
                 class="flex items-center  justify-center px-6 py-2.5 w-full rounded-lg bg-[#496948] text-white border-2 border-[#496948] hover:bg-white hover:text-[#496948] transition-colors duration-300 ease-in-out disabled:cursor-not-allowed">Buy:
@@ -82,13 +91,18 @@
             </button>
             @else
             <button id="formButton" type="submit"
-                class="flex items-center justify-center px-6 py-2.5 w-full rounded-lg bg-[#496948] text-white border-2 border-[#496948] hover:bg-white hover:text-[#496948] transition-colors duration-300 ease-in-out disabled:cursor-not-allowed">Ready
-                To Pick Up</span>
+                class="flex items-center justify-center px-6 py-2.5 w-full rounded-lg bg-[#496948] text-white border-2 border-[#496948] hover:bg-white hover:text-[#496948] transition-colors duration-300 ease-in-out disabled:cursor-not-allowed group">
+                <div>
+                    <p>Ready To Pick Up </p>
+                    <span id="point"
+                        class="text-xs text-gray-300 group-hover:text-gray-600 transition-colors duration-300 ease-in-out"></span>
+                </div>
             </button>
             @endif
             <span id="error-form-main" class="error-message text-red-500 text-sm hidden"></span>
         </form>
     </div>
+
     <!-- Main modal -->
     <div id="crud-modal" tabindex="-1" aria-hidden="true"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -305,6 +319,43 @@
 
 {{-- QuantityForm --}}
 <script>
+    function calculatePoint(weight) {
+        const pointPerWeight = {{ $product->point_per_weight }};
+        const weightForPoint = {{ $product->weight_for_point }};
+        return Math.floor((pointPerWeight * weight) / weightForPoint);
+    }
+
+    function updatePointDisplay(points) {
+        const pointElement = document.getElementById('point');
+        if (pointElement) {
+            pointElement.textContent = `You will get ${points} points`;
+        }
+    }
+
+    function calculatePrice(){
+        const quantityInput = document.getElementById('quantity');
+        const unitSelect = document.getElementById('unit');
+        const priceSpan = document.getElementById('price');
+
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const unit = unitSelect.value;
+
+        const title = '{{$title}}';
+
+        // Convert current input to grams
+        const currentWeight = convertToGrams(quantity, unit);
+
+        // Calculate price
+        const pricePerUnit =
+            @if($title=='Buy')
+                {{$product->price_per_unit}}
+            @else
+                {{$product->price_sell_per_unit}}
+            @endif;
+
+        return currentWeight * pricePerUnit;
+    }
+
     function showErrorQuantity(message) {
         const errorSpan = document.getElementById('error-quantity');
         errorSpan.textContent = message;
@@ -336,7 +387,6 @@
 
         const quantity = parseFloat(quantityInput.value) || 0;
         const unit = unitSelect.value;
-
         const title = '{{$title}}';
 
         // Get minimal weight and stock
@@ -350,41 +400,38 @@
         );
 
         const stockInGrams = convertToGrams({{$product->stock}}, '{{$product->stock_unit}}');
-
-        // Convert current input to grams
         const currentWeight = convertToGrams(quantity, unit);
 
-        // Clear previous error
         clearErrorQuantity();
 
-
         // Validate minimum weight
-        if (currentWeight < minimalWeight) {
-            if(title=='Buy'){
-                showErrorQuantity(`Minimum purchase is ${minimalWeight} grams (${minimalWeight/1000} kg)`);
-            } else {
-                showErrorQuantity(`Minimum sell is ${minimalWeight} grams (${minimalWeight/1000} kg)`);
+            if (currentWeight < minimalWeight) {
+                if(title=='Buy'){
+                    showErrorQuantity(`Minimum purchase is ${minimalWeight} grams (${minimalWeight/1000} kg)`);
+                } else {
+                    showErrorQuantity(`Minimum sell is ${minimalWeight} grams (${minimalWeight/1000} kg)`);
+                }
+
+                formButton.disabled = true;
+                formButton.classList.add('opacity-50', 'cursor-not-allowed');
+                formButton.classList.remove('hover:bg-white', 'hover:text-[#496948]');
+
+                if(title=='Buy') priceSpan.textContent = '-';
+                if(title=='Sell') updatePointDisplay(0);
+                return;
             }
-
-            formButton.disabled = true;
-            formButton.classList.add('opacity-50', 'cursor-not-allowed');
-            formButton.classList.remove('hover:bg-white', 'hover:text-[#496948]');
-
-            priceSpan.textContent = '-';
-            return;
-        }
 
         // Validate stock
-        if (currentWeight > stockInGrams) {
-            if(title=='Buy'){
+        if(title=='Buy'){
+            if (currentWeight > stockInGrams) {
                 showErrorQuantity(`Exceeds available stock. Maximum purchase is ${stockInGrams} grams (${stockInGrams/1000} kg)`);
-            }
-            formButton.disabled = true;
-            formButton.classList.add('opacity-50', 'cursor-not-allowed');
-            formButton.classList.remove('hover:bg-white', 'hover:text-[#496948]');
+                formButton.disabled = true;
+                formButton.classList.add('opacity-50', 'cursor-not-allowed');
+                formButton.classList.remove('hover:bg-white', 'hover:text-[#496948]');
 
-            priceSpan.textContent = '-';
-            return;
+                priceSpan.textContent = '-';
+                return;
+            }
         }
 
         formButton.disabled = false;
@@ -392,15 +439,23 @@
         formButton.classList.add('bg-[#496948]', 'text-white', 'hover:bg-white', 'hover:text-[#496948]', 'transition-colors', 'duration-300', 'ease-in-out');
 
         // Calculate price
-        const pricePerUnit =
-            @if($title=='Buy')
-                {{$product->price_per_unit}}
-            @else
-                {{$product->price_sell_per_unit}}
-            @endif;
+        const pricePerUnit = @if($title=='Buy') {{$product->price_per_unit}} @else {{$product->price_sell_per_unit}} @endif;
+        let totalPrice = currentWeight * pricePerUnit;
 
-        const totalPrice = currentWeight * pricePerUnit;
-        priceSpan.textContent = totalPrice > 0 ? `${formatRupiah(totalPrice)}` : '-';
+        if(title == 'Buy') {
+            // Handle buy transaction with discount promo
+            if(selectedPromo && selectedPromo.promo.type_promo === 'discount' && selectedPromo.promo.discount > 0) {
+                const discount = (selectedPromo.promo.discount / 100) * totalPrice;
+                totalPrice -= discount;
+            }
+            priceSpan.textContent = totalPrice > 0 ? `${formatRupiah(totalPrice)}` : '-';
+        } else {
+            let points = calculatePoint(currentWeight);
+            if(selectedPromo && selectedPromo.promo.type_promo === 'point' && selectedPromo.promo.multiply_point > 0) {
+                points = points * selectedPromo.promo.multiply_point;
+            }
+            updatePointDisplay(points);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -416,6 +471,95 @@
         validateAndCalculate();
     });
 </script>
+
+{{-- PromoList --}}
+<script>
+    let selectedPromo = null;
+    let selectedPromoId = null;
+
+    async function fetchPromos() {
+        const promoList = document.getElementById('promoList');
+        try {
+            promoList.innerHTML = '<div class="w-full text-center text-gray-500">Loading vouchers...</div>';
+
+            const response = await fetch(`{{ route('c.transactions.promoList', strtolower($title)) }}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                if (data.data && data.data.length > 0) {
+                    console.log(data);
+                    renderPromos(data.data);
+                } else {
+                    promoList.innerHTML = '<div class="w-full text-center text-gray-500">You don\'t have any voucher promo</div>';
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching promos:', error);
+            promoList.innerHTML = '<div class="w-full text-center text-red-500">Failed to load vouchers</div>';
+        }
+    }
+
+    function renderPromos(promos) {
+        const promoList = document.getElementById('promoList');
+        promoList.innerHTML = '';
+
+        promos.forEach(data => {
+            const promoCard = document.createElement('div');
+            promoCard.className = 'flex-shrink-0 w-48 p-4 border rounded-lg cursor-pointer snap-start transition-all duration-200 hover:shadow-md';
+            promoCard.setAttribute('data-promo-id', data.promo.id);
+
+            promoCard.innerHTML = `
+                <div class="space-y-2">
+                    <p class="font-semibold">${data.promo.name}</p>
+                    <p class="text-xs text-gray-400">Have : ${data.promo_count} voucher</p>
+                </div>
+            `;
+
+            promoCard.addEventListener('click', () => selectPromo(data, promoCard));
+            promoList.appendChild(promoCard);
+        });
+    }
+
+    function selectPromo(promo, element) {
+        const isCurrentlySelected = element.classList.contains('selected-promo');
+
+        // Remove styling from previous selection
+        const previousSelected = document.querySelector('.selected-promo');
+        if (previousSelected) {
+            previousSelected.classList.remove('selected-promo', 'border-[#496948]', 'bg-[#496948]/10');
+        }
+
+        // If clicking the same promo, unselect it
+        if (isCurrentlySelected) {
+            selectedPromo = null;
+            selectedPromoId = null;
+
+            // Reset points to base calculation
+            const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            const currentWeight = convertToGrams(quantity, document.getElementById('unit').value);
+            let basePoints = calculatePoint(currentWeight);
+            updatePointDisplay(basePoints);
+            return;
+        }
+
+        // Select new promo
+        element.classList.add('selected-promo', 'border-[#496948]', 'bg-[#496948]/10');
+        selectedPromo = promo;
+        selectedPromoId = promo.id;
+        document.getElementById('error-promo').classList.add('hidden');
+
+        validateAndCalculate();
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchPromos);
+</script>
+
 
 {{-- TransactionForm --}}
 <script>
@@ -457,14 +601,17 @@
             formData.append('product_id', '{{$product->id}}');
             formData.append('product_name', '{{$product->name}}');
             formData.append('destination', addressInput.value);
-            const price = priceSpan ? priceSpan.textContent : '';
-            if (price && price !== '-') {
+            formData.append('customer_promo_id', selectedPromoId);
+            const price = priceSpan ? calculatePrice() : 0;
+            if (price && (price !== '-' || price !== '')) {
                 formData.append('price', price);
+            } else {
+                formData.append('price',0);
             }
-            // Replace console.log(formData.data) with:
-            for (let [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
-            }
+            // // Replace console.log(formData.data) with:
+            // for (let [key, value] of formData.entries()) {
+            //     console.log(`${key}: ${value}`);
+            // }
 
             const response = await fetch("{{route('c.transactions.store')}}", {
                 method: 'POST',
@@ -475,7 +622,6 @@
             });
 
             const result = await response.json();
-            console.log(result);
 
             if (response.ok) {
                 // Show success state
@@ -493,6 +639,7 @@
                     window.location.href = "{{route('c.home')}}";
                 }, 2000);
             } else {
+                console.log(result.debug);
                 throw new Error(result.message || 'Transaction failed');
             }
         } catch (error) {

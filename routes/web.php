@@ -23,12 +23,16 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('c.home');
+    Route::get('history', [HomeController::class, 'history'])->name('c.history');
+    Route::get('redeemPoint', [HomeController::class, 'redeemPoint'])->name('c.redeemPoint');
+    Route::post('redeemPoint/{uuid}', [HomeController::class, 'buyPromo'])->name('c.buyPromo');
     Route::prefix('transactions')->group(function () {
         Route::get('buy', [TransactionController::class, 'indexBuy'])->name('c.transactions.buy');
         Route::get('sell', [TransactionController::class, 'indexSell'])->name('c.transactions.sell');
         Route::get('{title}/form/{uuid}', [TransactionController::class, 'create'])->name('c.transactions.form');
         Route::post('addAddress', [TransactionController::class, 'addAddress'])->name('c.transactions.addAddress');
         Route::get('addressList', [TransactionController::class, 'addressList'])->name('c.transactions.addressList');
+        Route::get('promoList/{type}', [TransactionController::class, 'promoList'])->name('c.transactions.promoList');
         Route::post('store', [TransactionController::class, 'store'])->name('c.transactions.store');
     });
 });

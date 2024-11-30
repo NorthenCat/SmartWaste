@@ -18,11 +18,18 @@ class Transactions extends Model
         'address',
         'type',
         'bonus_point',
+        'is_promo',
+        'promo_id'
     ];
 
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
+    }
+
+    public function promo()
+    {
+        return $this->belongsTo(Promo::class, 'promo_id', 'id');
     }
 
 

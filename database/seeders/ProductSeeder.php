@@ -24,6 +24,8 @@ class ProductSeeder extends Seeder
                 'point_per_weight' => 1,
                 'minimal_weight' => 800,
                 'minimal_sell_weight' => 800,
+                'stock' => 12500,
+                'stock_unit' => 'gr',
                 'image' => '-'
             ],
             [
@@ -36,6 +38,8 @@ class ProductSeeder extends Seeder
                 'point_per_weight' => 1,
                 'minimal_weight' => 500,
                 'minimal_sell_weight' => 500,
+                'stock' => 8,
+                'stock_unit' => 'kg',
                 'image' => '-'
             ],
             [
@@ -48,6 +52,8 @@ class ProductSeeder extends Seeder
                 'point_per_weight' => 1,
                 'minimal_weight' => 300,
                 'minimal_sell_weight' => 300,
+                'stock' => 500,
+                'stock_unit' => 'gr',
                 'image' => '-'
             ],
         ];
