@@ -32,7 +32,7 @@
             <div class="flex flex-col space-y-4 h-full overflow-y-auto">
                 @foreach($promos as $promo)
                 <div class="relative flex flex-col w-full bg-white rounded-lg px-2 text-sm space-y-2 pb-1 cursor-pointer"
-                    @if(auth()->user()->customer->point > $promo->point_price)
+                    @if(auth()->user()->customer->point >= $promo->point_price)
                     onclick="showConfirmModal('{{$promo->uuid}}', {{$promo->point_price}})"
                     style="pointer-events: pointer;"
                     @else

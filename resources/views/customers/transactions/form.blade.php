@@ -633,7 +633,6 @@
                 `;
                 formButton.classList.remove('bg-[#496948]');
                 formButton.classList.add('bg-green-500');
-
                 // Redirect after success
                 setTimeout(() => {
                     window.location.href = "{{route('c.home')}}";

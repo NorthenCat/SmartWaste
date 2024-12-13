@@ -15,13 +15,12 @@
     <meta property="og:url" content="https://yourwebsite.com/dashboard">
 
 
-    {{-- Icon --}}
-    <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="path/to/your/favicon.png" type="image/png">
-
     <!-- Google Fonts (optional if you need custom fonts) -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+
+    {{-- Icon --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -38,6 +37,10 @@
 
     {{-- Development --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Production --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('build/assets/app-Cpd-ZbJc.css')}}">
+    <script type="module" src="{{asset('build/assets/app-DxvN5yQS.js')}}" defer></script> --}}
 </head>
 
 

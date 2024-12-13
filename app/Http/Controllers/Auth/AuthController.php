@@ -39,7 +39,7 @@ class AuthController extends Controller
             $data = User::where('email', $credentials['email'])->first();
             return redirect()->intended(Auth::user()->role === 'admin' ? '/admin' : '/dashboard');
         }
-        return redirect()->back()->with('status', 'Wrong Email or Password !');
+        return redirect()->back()->withErrors(['invalidLogin' => 'Wrong Email or Password!']);
     }
 
     public function postRegis(Request $request)

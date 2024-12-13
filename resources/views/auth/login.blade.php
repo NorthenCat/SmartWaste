@@ -19,6 +19,11 @@
                 <input type="password" name="password" id="password" placeholder="••••••••"
                     class="w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 outline-none mt-1" />
             </div>
+            @error('invalidLogin')
+            <div class="py-3 px-4 w-full bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                <span>{{ $message }}</span>
+            </div>
+            @enderror
             <div class="py-3 px-4 w-full flex items-center">
                 <input type="checkbox" name="remember" id="remember" class="mr-2">
                 <label for="remember" class="text-gray-700 text-sm">Remember Me</label>

@@ -55,82 +55,117 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+        // Memulai transaksi database
         DB::beginTransaction();
         try {
+            // Validasi data yang masuk
             $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'product_id' => 'required|integer',
-                'product_name' => 'required|string|max:255',
-                'quantity' => 'required|min:0.1',
-                'unit' => 'required|string|max:255',
-                'destination' => 'required|string|max:255',
-                'price' => 'required',
-                'customer_promo_id' => 'nullable',
+                'title' => 'required|string|max:255',        // Tipe transaksi (Beli/Jual)
+                'product_id' => 'required|integer',          // ID produk
+                'product_name' => 'required|string|max:255', // Nama produk
+                'quantity' => 'required|min:0.1',            // Jumlah barang
+                'unit' => 'required|string|max:255',         // Satuan (kg/g)
+                'destination' => 'required|string|max:255',   // Alamat pengiriman
+                'price' => 'required',                       // Harga total
+                'customer_promo_id' => 'nullable',           // ID promo (opsional)
             ]);
 
-            //check ids
+            // Cek keberadaan produk
             $product = Product::find($validated['product_id']);
             if (!$product) {
                 throw ValidationException::withMessages([
-                    'product_id' => 'Product not found'
+                    'product_id' => 'Produk tidak ditemukan'
                 ]);
             }
 
+            // Validasi dan penerapan promo
+            $isPromo = false;
             if ($validated['customer_promo_id'] != 'null') {
+                // Cek apakah promo milik pengguna dan masih valid
                 $customerPromo = CustomerPromo::where('id', $validated['customer_promo_id'])
                     ->where('customer_id', Auth::user()->customer->id)
                     ->first();
 
                 if (!$customerPromo) {
                     throw ValidationException::withMessages([
-                        'customer_promo_id' => 'Promo not found'
+                        'customer_promo_id' => 'Promo tidak ditemukan'
                     ]);
                 }
 
                 if ($customerPromo->valid == false) {
                     throw ValidationException::withMessages([
-                        'customer_promo_id' => 'Promo not valid'
+                        'customer_promo_id' => 'Promo sudah tidak berlaku'
                     ]);
                 }
 
+                // Tandai promo sudah digunakan
                 $isPromo = true;
                 $customerPromo->valid = false;
                 $customerPromo->save();
             }
 
+            // Proses transaksi BELI
             if ($validated['title'] == 'Buy') {
+                // Cek stok produk
                 $product = Product::find($validated['product_id']);
                 if ($product->stock < $validated['quantity']) {
                     throw ValidationException::withMessages([
-                        'quantity' => 'Stock is not enough'
+                        'quantity' => 'Stok tidak mencukupi'
                     ]);
                 }
 
+                // Terapkan diskon jika ada promo
                 if ($isPromo) {
                     $validated['price'] = $validated['price'] - ($validated['price'] * ($customerPromo->promo->discount / 100));
                 }
+
+                // kurangkan stok produk
+                if ($validated['unit'] == $product->stock_unit) {
+                    $product->stock -= $validated['quantity'];
+                } else if ($validated['unit'] == 'kg' && $product->stock_unit == 'gr') {
+                    $product->stock -= ($validated['quantity'] * 1000); // Konversi kg ke gr
+                } else if ($validated['unit'] == 'gr' && $product->stock_unit == 'kg') {
+                    $product->stock -= $validated['quantity'] / 1000; // Konversi gr ke kg
+                }
+                $product->save();
             }
 
+            // Proses transaksi JUAL dan perhitungan poin
             $bonus_point = 0;
             if ($validated['title'] == 'Sell') {
                 $product = Product::find($validated['product_id']);
+
+                // Hitung poin berdasarkan berat
                 if ($validated['unit'] == 'kg') {
-                    // If unit is kilogram
+                    // Konversi kg ke gram untuk perhitungan poin
                     $bonus_point = ($product->point_per_weight * ($validated['quantity'] * 1000)) / $product->weight_for_point;
                 } else {
-                    // If unit is gram
+                    // Langsung hitung dalam gram
                     $bonus_point = ($product->point_per_weight * $validated['quantity']) / $product->weight_for_point;
                 }
 
+                // Terapkan pengali poin jika ada promo pengganda poin
                 if ($isPromo) {
                     $bonus_point = $bonus_point * $customerPromo->promo->multiply_point;
                 }
 
+                // Update poin pelanggan
                 $customer = Customer::find(Auth::user()->customer->id);
                 $customer->point += $bonus_point;
                 $customer->save();
+
+                // tambahkan stok produk
+                if ($validated['unit'] == $product->stock_unit) {
+                    $product->stock += $validated['quantity'];
+                } else if ($validated['unit'] == 'kg' && $product->stock_unit == 'gr') {
+                    $product->stock += $validated['quantity'] * 1000; // Konversi kg ke gr
+                } else if ($validated['unit'] == 'gr' && $product->stock_unit == 'kg') {
+                    $product->stock += $validated['quantity'] / 1000; // Konversi gr ke kg
+                }
+                $product->save();
             }
 
+            // Buat record transaksi
             $transaction = Transactions::create([
                 'uuid' => \Str::uuid(),
                 'customer_id' => Auth::user()->customer->id,
@@ -145,17 +180,19 @@ class TransactionController extends Controller
                 'promo_id' => $customerPromo->promo->id ?? null,
             ]);
 
+            // Commit transaksi jika semua berhasil
             DB::commit();
 
-            session()->flash('success_transaction', 'Transaction added successfully');
+            session()->flash('success_transaction', 'Transaksi berhasil ditambahkan');
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Transaction added successfully',
-                'data' => $transaction
+                'message' => 'Transaksi berhasil ditambahkan',
+                'data' => $transaction,
             ], 201);
 
         } catch (ValidationException $e) {
+            // Tangani error validasi
             DB::rollBack();
             return response()->json([
                 'status' => 'error',
@@ -163,10 +200,11 @@ class TransactionController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Tangani error tidak terduga
             DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to add transaction: ' . $e->getMessage()
+                'message' => 'Gagal menambahkan transaksi: ' . $e->getMessage()
             ], 500);
         }
     }
