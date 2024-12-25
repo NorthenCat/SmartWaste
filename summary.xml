@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metrics generated="2024-12-23T13:27:06" pdepend="@package_version@" ahh="1.4" andc="0.1875" calls="155" ccn="54" ccn2="61" cloc="85" clsa="1" clsc="12" eloc="536" fanout="32" leafs="9" lloc="237" loc="743" maxDIT="2" ncloc="658" noc="13" nof="0" noi="0" nom="26" nop="6" roots="4">
+  <files>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Auth\AuthController.php" loc="84" cloc="2" eloc="63" lloc="29" ncloc="82"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Controller.php" loc="9" cloc="1" eloc="5" lloc="1" ncloc="8"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Customer\HomeController.php" loc="102" cloc="6" eloc="73" lloc="40" ncloc="96"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Customer\TransactionController.php" loc="302" cloc="45" eloc="232" lloc="109" ncloc="257"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Middleware\RoleMiddleware.php" loc="26" cloc="5" eloc="16" lloc="9" ncloc="21"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Customer.php" loc="19" cloc="0" eloc="14" lloc="4" ncloc="19"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\CustomerAddress.php" loc="22" cloc="0" eloc="17" lloc="6" ncloc="22"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\CustomerPromo.php" loc="22" cloc="0" eloc="16" lloc="8" ncloc="22"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Product.php" loc="25" cloc="0" eloc="21" lloc="4" ncloc="25"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Promo.php" loc="14" cloc="0" eloc="8" lloc="4" ncloc="14"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Transactions.php" loc="37" cloc="0" eloc="29" lloc="8" ncloc="37"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\User.php" loc="56" cloc="18" eloc="30" lloc="11" ncloc="38"/>
+    <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Providers\AppServiceProvider.php" loc="25" cloc="8" eloc="12" lloc="4" ncloc="17"/>
+  </files>
+  <package name="App\Http\Controllers\Auth" noc="1" noi="0" nom="5" nof="0" cr="0.15" rcr="0.1925">
+    <class name="AuthController" fqname="App\Http\Controllers\Auth\AuthController" start="15" end="83" loc="69" cloc="0" eloc="48" lloc="18" ncloc="69" dit="1" noam="5" nocc="0" noom="0" nom="5" cr="0.15" rcr="0.1925" ca="0" cbo="6" ce="6" impl="0" cis="5" csz="5" npm="5" vars="0" varsi="0" varsnp="0" wmc="7" wmci="7" wmcnp="7">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Auth\AuthController.php"/>
+      <method name="login" start="18" end="21" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="7" hnd="7" hv="19.651484454403" hd="6.25" hl="0.16" he="122.82177784002" ht="6.8234321022233" hb="0.0082362400950509" hi="3.1442375127045" mi="80.401219851729"/>
+      <method name="register" start="23" end="26" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="7" hnd="7" hv="19.651484454403" hd="6.25" hl="0.16" he="122.82177784002" ht="6.8234321022233" hb="0.0082362400950509" hi="3.1442375127045" mi="80.401219851729"/>
+      <method name="authentication" start="28" end="43" ccn="3" ccn2="3" loc="16" cloc="0" eloc="14" lloc="8" ncloc="16" npath="3" hnt="71" hnd="36" hv="367.0646751024" hd="10.5" hl="0.095238095238095" he="3854.1790885752" ht="214.1210604764" hb="0.081940763408427" hi="34.958540485943" mi="56.636534124919"/>
+      <method name="postRegis" start="45" end="70" ccn="1" ccn2="1" loc="26" cloc="0" eloc="22" lloc="4" ncloc="26" npath="1" hnt="88" hnd="43" hv="477.51129841378" hd="8.59375" hl="0.11636363636364" he="4103.6127207435" ht="227.97848448575" hb="0.085439032841036" hi="55.564951088149" mi="51.823658236927"/>
+      <method name="logout" start="72" end="80" ccn="1" ccn2="1" loc="9" cloc="0" eloc="6" lloc="4" ncloc="9" npath="1" hnt="23" hnd="13" hv="85.110113517245" hd="6.8571428571429" hl="0.14583333333333" he="583.6122069754" ht="32.422900387522" hb="0.02327885722549" hi="12.411891554598" mi="69.377180156701"/>
+    </class>
+  </package>
+  <package name="App\Http\Controllers" noc="1" noi="0" nom="0" nof="0" cr="0.405" rcr="0.15">
+    <class name="Controller" fqname="App\Http\Controllers\Controller" start="5" end="8" loc="4" cloc="1" eloc="0" lloc="0" ncloc="3" dit="0" noam="0" nocc="3" noom="0" nom="0" cr="0.5325" rcr="0.15" ca="0" cbo="0" ce="0" impl="0" cis="0" csz="0" npm="0" vars="0" varsi="0" varsnp="0" wmc="0" wmci="0" wmcnp="0">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Controller.php"/>
+    </class>
+  </package>
+  <package name="App\Http\Controllers\Customer" noc="2" noi="0" nom="11" nof="0" cr="0.15" rcr="0.235">
+    <class name="HomeController" fqname="App\Http\Controllers\Customer\HomeController" start="16" end="101" loc="86" cloc="4" eloc="58" lloc="29" ncloc="82" dit="1" noam="4" nocc="0" noom="0" nom="4" cr="0.15" rcr="0.1925" ca="0" cbo="6" ce="6" impl="0" cis="4" csz="4" npm="4" vars="0" varsi="0" varsnp="0" wmc="9" wmci="9" wmcnp="9">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Customer\HomeController.php"/>
+      <method name="index" start="21" end="39" ccn="1" ccn2="2" loc="19" cloc="1" eloc="14" lloc="5" ncloc="18" npath="1" hnt="82" hnd="33" hv="413.64031778739" hd="14.857142857143" hl="0.067307692307692" he="6145.5132928413" ht="341.41740515785" hb="0.11183665960848" hi="27.84117523569" mi="56.407770706188"/>
+      <method name="history" start="41" end="53" ccn="1" ccn2="2" loc="13" cloc="0" eloc="10" lloc="5" ncloc="13" npath="1" hnt="76" hnd="33" hv="383.37395307124" hd="12" hl="0.083333333333333" he="4600.4874368549" ht="255.58263538083" hb="0.092203621229248" hi="31.947829422604" mi="59.826470676684"/>
+      <method name="redeemPoint" start="55" end="59" ccn="1" ccn2="1" loc="5" cloc="0" eloc="4" lloc="2" ncloc="5" npath="1" hnt="16" hnd="13" hv="59.207035490257" hd="5.8333333333333" hl="0.17142857142857" he="345.37437369317" ht="19.187465205176" hb="0.016408623577911" hi="10.149777512616" mi="74.322000810816"/>
+      <method name="buyPromo" start="61" end="100" ccn="4" ccn2="4" loc="40" cloc="0" eloc="30" lloc="17" ncloc="40" npath="5" hnt="104" hnd="48" hv="580.836100075" hd="18.096774193548" hl="0.055258467023173" he="10511.259746519" ht="583.95887480659" hb="0.15994914542117" hi="32.096112481863" mi="47.886178717441"/>
+    </class>
+    <class name="TransactionController" fqname="App\Http\Controllers\Customer\TransactionController" start="20" end="300" loc="281" cloc="43" eloc="210" lloc="91" ncloc="238" dit="1" noam="7" nocc="0" noom="0" nom="7" cr="0.15" rcr="0.1925" ca="0" cbo="11" ce="11" impl="0" cis="7" csz="7" npm="7" vars="0" varsi="0" varsnp="0" wmc="33" wmci="33" wmcnp="33">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Controllers\Customer\TransactionController.php"/>
+      <method name="indexBuy" start="25" end="30" ccn="1" ccn2="1" loc="6" cloc="0" eloc="5" lloc="3" ncloc="6" npath="1" hnt="22" hnd="16" hv="88" hd="5.0555555555556" hl="0.1978021978022" he="444.88888888889" ht="24.716049382716" hb="0.019425838993142" hi="17.406593406593" mi="71.002897300164"/>
+      <method name="indexSell" start="32" end="37" ccn="1" ccn2="1" loc="6" cloc="0" eloc="5" lloc="3" ncloc="6" npath="1" hnt="22" hnd="16" hv="88" hd="5.0555555555556" hl="0.1978021978022" he="444.88888888889" ht="24.716049382716" hb="0.019425838993142" hi="17.406593406593" mi="71.002897300164"/>
+      <method name="create" start="42" end="51" ccn="2" ccn2="2" loc="10" cloc="0" eloc="9" lloc="5" ncloc="10" npath="2" hnt="37" hnd="22" hv="164.99896988958" hd="9.1666666666667" hl="0.10909090909091" he="1512.4905573211" ht="84.027253184508" hb="0.043921165886162" hi="17.999887624318" mi="63.388349618162"/>
+      <method name="store" start="56" end="210" ccn="19" ccn2="23" loc="155" cloc="33" eloc="115" lloc="57" ncloc="122" npath="6252" hnt="523" hnd="116" hv="3586.7240604517" hd="47.727272727273" hl="0.020952380952381" he="171184.55743065" ht="9510.2531905917" hb="1.0276734457733" hi="75.150408885655" mi="27.064402267025"/>
+      <method name="addAddress" start="212" end="260" ccn="4" ccn2="4" loc="49" cloc="1" eloc="43" lloc="14" ncloc="48" npath="4" hnt="148" hnd="52" hv="843.66507828488" hd="18.243243243243" hl="0.054814814814815" he="15391.187238981" ht="855.06595772116" hb="0.20624977952804" hi="46.245345031912" mi="43.340484831648"/>
+      <method name="addressList" start="262" end="276" ccn="1" ccn2="1" loc="15" cloc="0" eloc="13" lloc="5" ncloc="15" npath="1" hnt="44" hnd="24" hv="201.73835003173" hd="8.1" hl="0.12345679012346" he="1634.080635257" ht="90.782257514279" hb="0.04624460428549" hi="24.90596913972" mi="59.427817714859"/>
+      <method name="promoList" start="278" end="299" ccn="1" ccn2="1" loc="22" cloc="0" eloc="20" lloc="4" ncloc="22" npath="1" hnt="60" hnd="32" hv="300" hd="6.8478260869565" hl="0.14603174603175" he="2054.347826087" ht="114.13043478261" hb="0.053867654154504" hi="43.809523809524" mi="54.140039941645"/>
+    </class>
+  </package>
+  <package name="App\Http\Middleware" noc="1" noi="0" nom="1" nof="0" cr="0.15" rcr="0.15">
+    <class name="RoleMiddleware" fqname="App\Http\Middleware\RoleMiddleware" start="10" end="25" loc="16" cloc="5" eloc="6" lloc="3" ncloc="11" dit="0" noam="0" nocc="0" noom="0" nom="1" cr="0.15" rcr="0.15" ca="0" cbo="3" ce="3" impl="0" cis="1" csz="1" npm="1" vars="0" varsi="0" varsnp="0" wmc="3" wmci="3" wmcnp="3">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Http\Middleware\RoleMiddleware.php"/>
+      <method name="handle" start="17" end="24" ccn="2" ccn2="3" loc="8" cloc="0" eloc="6" lloc="3" ncloc="8" npath="3" hnt="25" hnd="18" hv="104.24812503606" hd="8" hl="0.125" he="833.98500028846" ht="46.332500016026" hb="0.029533680460621" hi="13.031015629507" mi="68.491387396022"/>
+    </class>
+  </package>
+  <package name="App\Models" noc="7" noi="0" nom="7" nof="0" cr="0.15" rcr="0.405">
+    <class name="Customer" fqname="App\Models\Customer" start="7" end="18" loc="12" cloc="0" eloc="0" lloc="0" ncloc="12" dit="2" noam="0" nocc="0" noom="0" nom="0" cr="0.15" rcr="0.17125" ca="6" cbo="0" ce="0" impl="0" cis="0" csz="2" npm="0" vars="2" varsi="2" varsnp="0" wmc="0" wmci="0" wmcnp="0">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Customer.php"/>
+    </class>
+    <class name="CustomerAddress" fqname="App\Models\CustomerAddress" start="7" end="21" loc="15" cloc="0" eloc="3" lloc="1" ncloc="15" dit="2" noam="1" nocc="0" noom="0" nom="1" cr="0.15" rcr="0.17125" ca="1" cbo="1" ce="1" impl="0" cis="1" csz="3" npm="1" vars="2" varsi="2" varsnp="0" wmc="1" wmci="1" wmcnp="1">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\CustomerAddress.php"/>
+      <method name="customer" start="17" end="20" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="7" hnd="7" hv="19.651484454403" hd="6.25" hl="0.16" he="122.82177784002" ht="6.8234321022233" hb="0.0082362400950509" hi="3.1442375127045" mi="80.401219851729"/>
+    </class>
+    <class name="CustomerPromo" fqname="App\Models\CustomerPromo" start="7" end="21" loc="15" cloc="0" eloc="6" lloc="2" ncloc="15" dit="2" noam="2" nocc="0" noom="0" nom="2" cr="0.15" rcr="0.17125" ca="2" cbo="2" ce="2" impl="0" cis="2" csz="4" npm="2" vars="2" varsi="2" varsnp="0" wmc="2" wmci="2" wmcnp="2">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\CustomerPromo.php"/>
+      <method name="promo" start="12" end="15" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="11" hnd="10" hv="36.541209043761" hd="5.25" hl="0.19047619047619" he="191.84134747975" ht="10.657852637764" hb="0.011087668241344" hi="6.9602302940497" mi="78.514964679948"/>
+      <method name="customer" start="17" end="20" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="11" hnd="10" hv="36.541209043761" hd="5.25" hl="0.19047619047619" he="191.84134747975" ht="10.657852637764" hb="0.011087668241344" hi="6.9602302940497" mi="78.514964679948"/>
+    </class>
+    <class name="Product" fqname="App\Models\Product" start="7" end="24" loc="18" cloc="0" eloc="0" lloc="0" ncloc="18" dit="2" noam="0" nocc="0" noom="0" nom="0" cr="0.15" rcr="0.17125" ca="1" cbo="0" ce="0" impl="0" cis="0" csz="2" npm="0" vars="2" varsi="2" varsnp="0" wmc="0" wmci="0" wmcnp="0">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Product.php"/>
+    </class>
+    <class name="Promo" fqname="App\Models\Promo" start="7" end="13" loc="7" cloc="0" eloc="0" lloc="0" ncloc="7" dit="2" noam="0" nocc="0" noom="0" nom="0" cr="0.15" rcr="0.17125" ca="3" cbo="0" ce="0" impl="0" cis="0" csz="2" npm="0" vars="2" varsi="2" varsnp="0" wmc="0" wmci="0" wmcnp="0">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Promo.php"/>
+    </class>
+    <class name="Transactions" fqname="App\Models\Transactions" start="7" end="36" loc="30" cloc="0" eloc="6" lloc="2" ncloc="30" dit="2" noam="2" nocc="0" noom="0" nom="2" cr="0.15" rcr="0.17125" ca="2" cbo="2" ce="2" impl="0" cis="2" csz="4" npm="2" vars="2" varsi="2" varsnp="0" wmc="2" wmci="2" wmcnp="2">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\Transactions.php"/>
+      <method name="customer" start="25" end="28" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="11" hnd="10" hv="36.541209043761" hd="5.25" hl="0.19047619047619" he="191.84134747975" ht="10.657852637764" hb="0.011087668241344" hi="6.9602302940497" mi="78.514964679948"/>
+      <method name="promo" start="30" end="33" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="11" hnd="10" hv="36.541209043761" hd="5.25" hl="0.19047619047619" he="191.84134747975" ht="10.657852637764" hb="0.011087668241344" hi="6.9602302940497" mi="78.514964679948"/>
+    </class>
+    <class name="User" fqname="App\Models\User" start="10" end="55" loc="46" cloc="17" eloc="9" lloc="2" ncloc="29" dit="2" noam="2" nocc="0" noom="0" nom="2" cr="0.15" rcr="0.2775" ca="1" cbo="1" ce="1" impl="0" cis="1" csz="4" npm="1" vars="2" varsi="2" varsnp="0" wmc="2" wmci="2" wmcnp="1">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Models\User.php"/>
+      <method name="casts" start="42" end="48" ccn="1" ccn2="1" loc="7" cloc="0" eloc="6" lloc="1" ncloc="7" npath="1" hnt="13" hnd="11" hv="44.972611042285" hd="7.875" hl="0.12698412698413" he="354.15931195799" ht="19.675517331" hb="0.016685703503055" hi="5.7108077514013" mi="71.316969334197"/>
+      <method name="customer" start="51" end="54" ccn="1" ccn2="1" loc="4" cloc="0" eloc="3" lloc="1" ncloc="4" npath="1" hnt="11" hnd="10" hv="36.541209043761" hd="5.25" hl="0.19047619047619" he="191.84134747975" ht="10.657852637764" hb="0.011087668241344" hi="6.9602302940497" mi="78.514964679948"/>
+    </class>
+  </package>
+  <package name="App\Providers" noc="1" noi="0" nom="2" nof="0" cr="0.15" rcr="0.2775">
+    <class name="AppServiceProvider" fqname="App\Providers\AppServiceProvider" start="7" end="24" loc="18" cloc="8" eloc="4" lloc="0" ncloc="10" dit="2" noam="2" nocc="0" noom="0" nom="2" cr="0.15" rcr="0.2775" ca="0" cbo="0" ce="0" impl="0" cis="2" csz="2" npm="2" vars="0" varsi="0" varsnp="0" wmc="2" wmci="2" wmcnp="2">
+      <file name="D:\Tugas\KULIAH\SEMESTER-5\RPL-IMPPL\Project\SmartWaste\app\Providers\AppServiceProvider.php"/>
+      <method name="register" start="12" end="15" ccn="1" ccn2="1" loc="4" cloc="1" eloc="2" lloc="0" ncloc="3" npath="1" hnt="2" hnd="2" hv="2" hd="2" hl="0.5" he="4" ht="0.22222222222222" hb="0.00083994736659658" hi="1" mi="91.191023588314"/>
+      <method name="boot" start="20" end="23" ccn="1" ccn2="1" loc="4" cloc="1" eloc="2" lloc="0" ncloc="3" npath="1" hnt="2" hnd="2" hv="2" hd="2" hl="0.5" he="4" ht="0.22222222222222" hb="0.00083994736659658" hi="1" mi="91.191023588314"/>
+    </class>
+  </package>
+</metrics>
