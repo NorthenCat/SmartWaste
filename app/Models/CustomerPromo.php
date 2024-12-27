@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomerPromo extends Model
 {
+    use HasFactory;
     protected $table = "customer_promo";
     protected $fillable = ['customer_id', 'promo_id', 'valid'];
 

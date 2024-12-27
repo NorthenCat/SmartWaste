@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
+    use HasFactory;
     protected $table = 'customer';
 
     protected $fillable = [
@@ -13,6 +15,13 @@ class Customer extends Model
         'user_id',
         'full_name',
         'email',
-        'points'
+        'point'
     ];
+
+    public function promo()
+    {
+        return $this->belongsToMany(CustomerPromo::class, 'customer_promo')
+            ->withPivot('valid')
+            ->withTimestamps();
+    }
 }

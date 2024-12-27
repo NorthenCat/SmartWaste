@@ -39,12 +39,12 @@ class AuthControllerTest extends TestCase
              'email' => 'test@example.com',
              'password' => Hash::make('password'),
          ]);
-     
+
          $response = $this->post('/auth/login', [
              'email' => 'test@example.com',
              'password' => 'password',
          ]);
-     
+
          $response->assertRedirect('/dashboard');
      }
 

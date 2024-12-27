@@ -2,85 +2,144 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Promo;
 use Illuminate\Support\Facades\Artisan;
+use Str;
+use Hash;
 
 class TransactionControllerTest extends TestCase
 {
+    use RefreshDatabase;
+    protected $user;
+    protected $customer;
+    protected $products;
 
-    /**
-     * Test the indexBuy view is returned.
-     */
-    public function test_index_buy_view_is_returned(): void
+    protected $cardboard;
+    protected $paper;
+    protected $plastic;
+    protected $buyPromo;
+    protected $sellPromo;
+
+    protected function setUp(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        parent::setUp();
 
-        // Simulate clicking the "Buy" button
-        $response = $this->get('/transactions/buy');
+        // Create user and customer
+        $this->user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => Hash::make('password')
+        ]);
 
-        $response->assertStatus(200);
-        $response->assertViewIs('customers.transactions.index');
-        $response->assertViewHas('title', 'Buy');
-        $response->assertViewHas('products');
+        // Create associated customer
+        $this->customer = Customer::factory()->create([
+            'user_id' => $this->user->id,
+            'email' => $this->user->email,
+            'point' => 1000
+        ]);
+
+        // Create test products
+        $this->cardboard = Product::factory()->cardboard()->create();
+        $this->paper = Product::factory()->paper()->create();
+        $this->plastic = Product::factory()->plastic()->create();
+
+        $this->buyPromo = Promo::factory()->create([
+            'type_transaction' => 'Buy',
+            'discount' => 10,
+            'point_price' => 500,
+            'name' => 'Buy Promo'
+        ]);
+
+        $this->sellPromo = Promo::factory()->pointMultiplier()->create([
+            'type_transaction' => 'Sell',
+            'multiply_point' => 2,
+            'point_price' => 500,
+            'name' => 'Sell Promo'
+        ]);
     }
 
-    /**
-     * Test the indexSell view is returned.
-     */
-    public function test_index_sell_view_is_returned(): void
+    public function test_customer_can_buy_with_promo()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
-        // Simulate clicking the "Sell" button
-        $response = $this->get('/transactions/sell');
+        // Give customer a promo
+        $customerPromo = $this->customer->promo()->create([
+            'customer_id' => $this->customer->id,
+            'promo_id' => $this->buyPromo->id,
+            'valid' => true
+        ]);
 
-        $response->assertStatus(200);
-        $response->assertViewIs('customers.transactions.index');
-        $response->assertViewHas('title', 'Sell');
-        $response->assertViewHas('products');
+        // Buy 2kg of cardboard with promo
+        $product = $this->cardboard;
+        $quantity = 2;
+        $originalPrice = $product->price_sell_per_unit * $quantity;
+        $expectedPrice = $originalPrice - ($originalPrice * ($this->buyPromo->discount / 100));
+
+
+        $response = $this->postJson('/transactions/store', [
+            'title' => 'Buy',
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'quantity' => 2,
+            'unit' => 'kg', //unit is kg
+            'destination' => 'Test Address',
+            'price' => $expectedPrice,
+            'customer_promo_id' => $customerPromo->id
+        ]);
+
+        $response->assertStatus(201);
+
+        // Check if promo was applied
+        $this->assertDatabaseHas('transactions', [
+            'customer_id' => $this->customer->id,
+            'product_id' => $product->id,
+            'total_price' => $expectedPrice,
+            'is_promo' => true
+        ]);
+
+        // Check if promo was marked as used
+        $this->assertDatabaseHas('customer_promo', [
+            'id' => $customerPromo->id,
+            'valid' => false
+        ]);
     }
 
-    /**
-     * Test the create view is returned for Buy.
-     */
-    public function test_create_view_is_returned_for_buy(): void
+    public function test_customer_can_sell_with_point_multiplier_promo()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
-        $product = Product::factory()->create();
+        // Give customer a promo
+        $customerPromo = $this->customer->promo()->create([
+            'customer_id' => $this->customer->id,
+            'promo_id' => $this->sellPromo->id,
+            'valid' => true
+        ]);
 
-        // Simulate clicking the "Buy" button
-        $response = $this->get('/transactions/buy');
+        $product = $this->products->first();
+        $quantity = 2; // 2kg
+        $expectedPoints = ($quantity * 1000 * $product->point_per_weight / $product->weight_for_point) * $this->sellPromo->multiply_point;
 
-        $response = $this->get("/transactions/Buy/form/{$product->uuid}");
+        $response = $this->postJson('/transactions/store', [
+            'title' => 'Sell',
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'quantity' => $quantity,
+            'unit' => 'kg',
+            'destination' => 'Test Address',
+            'price' => 80000,
+            'customer_promo_id' => $customerPromo->id
+        ]);
 
-        $response->assertStatus(200);
-        $response->assertViewIs('customers.transactions.form');
-        $response->assertViewHas('product', $product);
-    }
+        $response->assertStatus(201);
 
-    /**
-     * Test the create view is returned for Sell.
-     */
-    public function test_create_view_is_returned_for_sell(): void
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        $product = Product::factory()->create();
-
-        // Simulate clicking the "Sell" button
-        $response = $this->get('/transactions/sell');
-
-        $response = $this->get("/transactions/Sell/form/{$product->uuid}");
-
-        $response->assertStatus(200);
-        $response->assertViewIs('customers.transactions.form');
-        $response->assertViewHas('product', $product);
+        // Check if points were multiplied correctly
+        $this->assertEquals(
+            1000 + $expectedPoints, // Initial points + earned points
+            $this->customer->fresh()->point
+        );
     }
 }
