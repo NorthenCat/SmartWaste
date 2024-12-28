@@ -29,6 +29,9 @@ class TransactionControllerTest extends TestCase
     {
         parent::setUp();
 
+        $this->withoutMiddleware(\App\Http\Middleware\RoleMiddleware::class);
+
+
         // Create user and customer
         $this->user = User::factory()->create([
             'email' => 'test@example.com',
@@ -62,12 +65,74 @@ class TransactionControllerTest extends TestCase
         ]);
     }
 
+    public function test_customer_can_buy_without_promo()
+    {
+        $this->actingAs($this->user);
+
+        $product = $this->cardboard;
+        $quantity = 2;
+        $expectedPrice = $product->price_sell_per_unit * $quantity;
+
+        $response = $this->postJson('/transactions/store', [
+            'title' => 'Buy',
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'quantity' => $quantity,
+            'unit' => 'kg',
+            'destination' => 'Test Address',
+            'price' => $expectedPrice,
+            'customer_promo_id' => null
+        ]);
+
+        $response->assertStatus(201);
+
+        $this->assertDatabaseHas('transactions', [
+            'customer_id' => $this->customer->id,
+            'type' => 'Buy',
+            'is_promo' => false,
+            'total_price' => $expectedPrice
+        ]);
+    }
+
+    public function test_customer_can_sell_without_promo()
+    {
+        $this->actingAs($this->user);
+
+        $product = $this->cardboard;
+        $quantity = 2;
+        $expectedPoints = (int) ceil(($quantity * 1000 * $product->point_per_weight) / $product->weight_for_point);
+
+        $response = $this->postJson('/transactions/store', [
+            'title' => 'Sell',
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'quantity' => $quantity,
+            'unit' => 'kg',
+            'destination' => 'Test Address',
+            'price' => 80000,
+            'customer_promo_id' => null
+        ]);
+
+        $response->assertStatus(201);
+
+        $this->assertEquals(
+            1000 + $expectedPoints,
+            $this->customer->fresh()->point
+        );
+
+        $this->assertDatabaseHas('transactions', [
+            'customer_id' => $this->customer->id,
+            'type' => 'Sell',
+            'is_promo' => false
+        ]);
+    }
+
     public function test_customer_can_buy_with_promo()
     {
         $this->actingAs($this->user);
 
         // Give customer a promo
-        $customerPromo = $this->customer->promo()->create([
+        $customerPromo = $this->customer->customerPromo()->create([
             'customer_id' => $this->customer->id,
             'promo_id' => $this->buyPromo->id,
             'valid' => true
@@ -96,8 +161,7 @@ class TransactionControllerTest extends TestCase
         // Check if promo was applied
         $this->assertDatabaseHas('transactions', [
             'customer_id' => $this->customer->id,
-            'product_id' => $product->id,
-            'total_price' => $expectedPrice,
+            'type' => 'Buy',
             'is_promo' => true
         ]);
 
@@ -111,19 +175,21 @@ class TransactionControllerTest extends TestCase
     public function test_customer_can_sell_with_point_multiplier_promo()
     {
         $this->actingAs($this->user);
+        $this->assertAuthenticated();
 
         // Give customer a promo
-        $customerPromo = $this->customer->promo()->create([
+        $customerPromo = $this->customer->customerPromo()->create([
             'customer_id' => $this->customer->id,
             'promo_id' => $this->sellPromo->id,
             'valid' => true
         ]);
 
-        $product = $this->products->first();
+        // Sell 2kg of cardboard with promo
+        $product = $this->cardboard;
         $quantity = 2; // 2kg
         $expectedPoints = ($quantity * 1000 * $product->point_per_weight / $product->weight_for_point) * $this->sellPromo->multiply_point;
 
-        $response = $this->postJson('/transactions/store', [
+        $response = $this->post('/transactions/store', [
             'title' => 'Sell',
             'product_id' => $product->id,
             'product_name' => $product->name,

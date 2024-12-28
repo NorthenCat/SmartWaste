@@ -18,10 +18,8 @@ class Customer extends Model
         'point'
     ];
 
-    public function promo()
+    public function customerPromo()
     {
-        return $this->belongsToMany(CustomerPromo::class, 'customer_promo')
-            ->withPivot('valid')
-            ->withTimestamps();
+        return $this->hasMany(CustomerPromo::class, 'customer_id', 'id');
     }
 }
