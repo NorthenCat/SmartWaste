@@ -80,7 +80,7 @@ class TransactionController extends Controller
 
             // Validasi dan penerapan promo
             $isPromo = false;
-            if ($validated['customer_promo_id'] != null) {
+            if ($validated['customer_promo_id'] != null && $validated['customer_promo_id'] != '' && $validated['customer_promo_id'] != 'null') {
                 // Cek apakah promo milik pengguna dan masih valid
                 $customerPromo = CustomerPromo::where('id', $validated['customer_promo_id'])
                     ->where('customer_id', Auth::user()->customer->id)

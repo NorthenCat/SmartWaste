@@ -36,11 +36,11 @@
     <title>SmartWaste</title>
 
     {{-- Development --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     {{-- Production --}}
-    {{--
-    <link rel="stylesheet" href="{{asset('build/assets/app-Cpd-ZbJc.css')}}">
-    <script type="module" src="{{asset('build/assets/app-DxvN5yQS.js')}}" defer></script> --}}
+
+    <link rel="stylesheet" href="{{asset('build/assets/app-Kb3RFkB6.css')}}">
+    <script type="module" src="{{asset('build/assets/app-DxvN5yQS.js')}}" defer></script>
 </head>
 
 
