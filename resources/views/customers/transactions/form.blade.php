@@ -540,11 +540,14 @@
             selectedPromo = null;
             selectedPromoId = null;
 
-            // Reset points to base calculation
             const quantity = parseFloat(document.getElementById('quantity').value) || 0;
             const currentWeight = convertToGrams(quantity, document.getElementById('unit').value);
+
+
+            // Reset points to base calculation
             let basePoints = calculatePoint(currentWeight);
             updatePointDisplay(basePoints);
+            validateAndCalculate();
             return;
         }
 
